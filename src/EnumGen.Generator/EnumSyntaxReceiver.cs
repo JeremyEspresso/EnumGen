@@ -7,21 +7,18 @@ namespace EnumGen.Generator
 {
 	internal class EnumSyntaxReceiver : ISyntaxContextReceiver
 	{
-		public List<ISymbol> Enums { get; } = new List<ISymbol>();
+		public List<(ISymbol, SeparatedSyntaxList<EnumMemberDeclarationSyntax>)> Enums { get; } = new List<(ISymbol, SeparatedSyntaxList<EnumMemberDeclarationSyntax>)>();
 
 		public void OnVisitSyntaxNode(GeneratorSyntaxContext context)
 		{
-			if (context.Node is EnumDeclarationSyntax eds)
+			if (context.Node is EnumDeclarationSyntax { AttributeLists: { Count: > 0 } } eds)
 			{
-				if (eds.AttributeLists.Count >= 1)
-				{
-					var enumSymbol = context.SemanticModel.GetDeclaredSymbol(eds);
-					var enumGenAttribute = enumSymbol?.GetAttributes().SingleOrDefault(attr => attr.AttributeClass?.ToDisplayString() == "EnumGen.EnumGenAttribute");
+				var enumSymbol = context.SemanticModel.GetDeclaredSymbol(eds);
+				var enumGenAttribute = enumSymbol?.GetAttributes().SingleOrDefault(attr => attr.AttributeClass?.ToDisplayString() == "EnumGen.EnumGenAttribute");
 
-					if (enumSymbol != null && enumGenAttribute != null)
-					{
-						Enums.Add(enumSymbol);
-					}
+				if (enumSymbol != null && enumGenAttribute != null)
+				{
+					Enums.Add(new(enumSymbol, eds.Members));
 				}
 			}
 		}

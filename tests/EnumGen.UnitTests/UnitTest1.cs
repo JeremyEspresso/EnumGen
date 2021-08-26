@@ -7,7 +7,8 @@ namespace EnumGen.UnitTests
         [Fact]
         public void Test1()
         {
-            //Level.High.MemberString();
+            Level.High.MemberString();
+            Testing.Enum.MemberString();
         }
     }
 
@@ -17,5 +18,25 @@ namespace EnumGen.UnitTests
         Low,
         Medium,
         High
+    }
+
+    [EnumGen]
+    public enum Testing
+	{
+        Low,
+        Medium,
+        High,
+        Swag,
+        Test,
+        Lol,
+        Ok,
+        Cry,
+        To,
+        Sleep,
+        F,
+        Kek,
+        Super,
+        Long,
+        Enum
     }
 }
